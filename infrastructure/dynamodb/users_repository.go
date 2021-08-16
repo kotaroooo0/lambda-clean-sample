@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	domain "github.com/kotaroooo0/lambda-clean-sample/domain/entity"
+	"github.com/kotaroooo0/lambda-clean-sample/entity"
 	"github.com/kotaroooo0/lambda-clean-sample/errors"
 )
 
@@ -26,7 +26,7 @@ var usersTableFields = map[string]*string{
 	"#ID": aws.String("Id"),
 }
 
-func (ur *UsersRepositoryImpl) Get(userID int) (*domain.User, error) {
+func (ur *UsersRepositoryImpl) Get(userID int) (*entity.User, error) {
 	input := &dynamodb.GetItemInput{
 		TableName:                aws.String(usersTableName),
 		ExpressionAttributeNames: usersTableFields,
@@ -36,7 +36,7 @@ func (ur *UsersRepositoryImpl) Get(userID int) (*domain.User, error) {
 		ProjectionExpression: aws.String("Id"),
 	}
 
-	user := domain.User{}
+	user := entity.User{}
 	result, err := ur.db.GetItem(input)
 	if err != nil {
 		return nil, errors.Wrap(err)
@@ -51,4 +51,19 @@ func (ur *UsersRepositoryImpl) Get(userID int) (*domain.User, error) {
 		return nil, errors.Wrap(err)
 	}
 	return &user, nil
+}
+
+func (ur *UsersRepositoryImpl) GetRecommendedUsers(userID int) ([]entity.User, error) {
+	recommended := []entity.User{
+		{
+			ID: 1,
+		},
+		{
+			ID: 5,
+		},
+		{
+			ID: 7,
+		},
+	}
+	return recommended, nil
 }

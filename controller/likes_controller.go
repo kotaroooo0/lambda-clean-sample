@@ -10,21 +10,6 @@ import (
 	"github.com/kotaroooo0/lambda-clean-sample/usecase"
 )
 
-const (
-	svrErrMsg      = `{"message": "Internal server error"}`
-	notFoundErrMsg = `{"message": "Not Found"}`
-)
-
-var svrErrResp = events.APIGatewayProxyResponse{
-	Body:       svrErrMsg,
-	StatusCode: http.StatusInternalServerError,
-}
-
-var notFoundErrResp = events.APIGatewayProxyResponse{
-	Body:       notFoundErrMsg,
-	StatusCode: http.StatusNotFound,
-}
-
 type LikesController struct {
 	likesInteractor usecase.LikesInteractor
 }
@@ -52,9 +37,8 @@ func (lc *LikesController) CreateLike(req events.APIGatewayProxyRequest) (events
 		return svrErrResp, err
 		return svrErrResp, err
 	}
-	response := CreateLikeResponse{
-		Success: true,
-	}
+
+	response := toCreateLikeResponse(true)
 
 	b, err := json.Marshal(response)
 	if err != nil {
@@ -65,4 +49,10 @@ func (lc *LikesController) CreateLike(req events.APIGatewayProxyRequest) (events
 		Body:       string(b),
 		StatusCode: http.StatusOK,
 	}, nil
+}
+
+func toCreateLikeResponse(success bool) CreateLikeResponse {
+	return CreateLikeResponse{
+		Success: success,
+	}
 }

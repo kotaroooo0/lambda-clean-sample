@@ -1,7 +1,8 @@
 package usecase
 
-import domain "github.com/kotaroooo0/lambda-clean-sample/domain/entity"
+import "github.com/kotaroooo0/lambda-clean-sample/entity"
 
 type UsersRepository interface {
-	Get(userID int) (domain.User, error)
+	Get(userID int) (*entity.User, error)
+	GetRecommendedUsers() ([]entity.User, error)
 }
